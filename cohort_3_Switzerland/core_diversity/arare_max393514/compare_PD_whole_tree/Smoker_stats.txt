@@ -1,0 +1,2 @@
+Group1	Group2	Group1 mean	Group1 std	Group2 mean	Group2 std	t stat	p-value
+Yes	No	27.8837070625	3.71296276094	28.4848307857	4.31660865993	-0.39612724917	0.697
