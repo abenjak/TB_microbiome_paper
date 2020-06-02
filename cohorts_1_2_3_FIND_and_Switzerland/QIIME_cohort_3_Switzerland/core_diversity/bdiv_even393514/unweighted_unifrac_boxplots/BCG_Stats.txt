@@ -1,0 +1,36 @@
+# The tests of significance were performed using a two-sided Student's two-sample t-test.
+# Alternative hypothesis: Group 1 mean != Group 2 mean
+# The nonparametric p-values were calculated using 999 Monte Carlo permutations.
+# The nonparametric p-values contain the correct number of significant digits.
+# Entries marked with "N/A" could not be calculated because at least one of the groups
+# of distances was empty, both groups each contained only a single distance, or
+# the test could not be performed (e.g. no variance in groups with the same mean).
+Group 1	Group 2	t statistic	Parametric p-value	Parametric p-value (Bonferroni-corrected)	Nonparametric p-value	Nonparametric p-value (Bonferroni-corrected)
+All within BCG	All between BCG	-0.0895418565066	0.928692692254	1	0.935	1.000
+All within BCG	NA vs. NA	0.700666545604	0.484474676953	1	0.511	1.000
+All within BCG	Yes vs. Yes	0.444273923028	0.657215535553	1	0.647	1.000
+All within BCG	No vs. No	-1.18207988525	0.238651275526	1	0.236	1.000
+All within BCG	NA vs. Yes	0.564534984428	0.572908693236	1	0.558	1.000
+All within BCG	NA vs. No	-0.373754623808	0.708967564735	1	0.701	1.000
+All within BCG	Yes vs. No	-0.334338079503	0.738366957027	1	0.749	1.000
+All between BCG	NA vs. NA	0.717513917671	0.473630652377	1	0.462	1.000
+All between BCG	Yes vs. Yes	0.550346800864	0.582403194475	1	0.604	1.000
+All between BCG	No vs. No	-1.18251531468	0.237898791859	1	0.237	1.000
+All between BCG	NA vs. Yes	0.663599669112	0.507363201007	1	0.508	1.000
+All between BCG	NA vs. No	-0.325133485593	0.745285456859	1	0.749	1.000
+All between BCG	Yes vs. No	-0.294199645007	0.768753514988	1	0.785	1.000
+NA vs. NA	Yes vs. Yes	-0.545478244351	0.586454286843	1	0.589	1.000
+NA vs. NA	No vs. No	-1.15021678939	0.2556372901	1	0.235	1.000
+NA vs. NA	NA vs. Yes	-0.500748395914	0.617616585187	1	0.611	1.000
+NA vs. NA	NA vs. No	-0.897885882049	0.372461703753	1	0.358	1.000
+NA vs. NA	Yes vs. No	-0.740437422495	0.460207661822	1	0.457	1.000
+Yes vs. Yes	No vs. No	-1.45320105016	0.148421852288	1	0.139	1.000
+Yes vs. Yes	NA vs. Yes	0.13444169163	0.893193411396	1	0.891	1.000
+Yes vs. Yes	NA vs. No	-0.724708408926	0.469709595694	1	0.473	1.000
+Yes vs. Yes	Yes vs. No	-0.700143411197	0.484521568411	1	0.509	1.000
+No vs. No	NA vs. Yes	1.53438453733	0.127482657239	1	0.137	1.000
+No vs. No	NA vs. No	0.713096443809	0.477672842241	1	0.468	1.000
+No vs. No	Yes vs. No	0.847855591839	0.397717591781	1	0.393	1.000
+NA vs. Yes	NA vs. No	-0.836498261935	0.404280128871	1	0.403	1.000
+NA vs. Yes	Yes vs. No	-0.792370923385	0.428986550029	1	0.430	1.000
+NA vs. No	Yes vs. No	0.0909762865564	0.927608810216	1	0.919	1.000

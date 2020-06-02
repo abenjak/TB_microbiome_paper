@@ -1,0 +1,18 @@
+# The tests of significance were performed using a two-sided Student's two-sample t-test.
+# Alternative hypothesis: Group 1 mean != Group 2 mean
+# The nonparametric p-values were calculated using 999 Monte Carlo permutations.
+# The nonparametric p-values contain the correct number of significant digits.
+# Entries marked with "N/A" could not be calculated because at least one of the groups
+# of distances was empty, both groups each contained only a single distance, or
+# the test could not be performed (e.g. no variance in groups with the same mean).
+Group 1	Group 2	t statistic	Parametric p-value	Parametric p-value (Bonferroni-corrected)	Nonparametric p-value	Nonparametric p-value (Bonferroni-corrected)
+All within Smoker	All between Smoker	0.492597835618	0.622546460468	1	0.632	1.000
+All within Smoker	Yes vs. Yes	-1.34172412894	0.180610773379	1	0.189	1.000
+All within Smoker	No vs. No	1.47126014375	0.142268919656	1	0.132	1.000
+All within Smoker	Yes vs. No	0.492597835618	0.622546460468	1	0.632	1.000
+All between Smoker	Yes vs. Yes	-1.75855045169	0.0795482502201	0.795482502201	0.085	0.850
+All between Smoker	No vs. No	1.09270917842	0.275361815306	1	0.258	1.000
+All between Smoker	Yes vs. No	0.0	1.0	1	1.000	1.000
+Yes vs. Yes	No vs. No	2.46350872488	0.0145663824673	0.145663824673	0.010	0.100
+Yes vs. Yes	Yes vs. No	1.75855045169	0.0795482502201	0.795482502201	0.076	0.760
+No vs. No	Yes vs. No	-1.09270917842	0.275361815306	1	0.287	1.000

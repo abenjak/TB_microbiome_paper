@@ -1,0 +1,2 @@
+Group1	Group2	Group1 mean	Group1 std	Group2 mean	Group2 std	t stat	p-value
+Control	TB	536.38145791	92.4739673163	548.362435696	68.5275438777	-0.389484330736	0.715
