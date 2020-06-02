@@ -1,2 +1,0 @@
-Group1	Group2	Group1 mean	Group1 std	Group2 mean	Group2 std	t stat	p-value
-Vietnam	South Africa	26.8502065	3.90148836854	29.6659742857	3.59953857526	-1.97503955144	0.056
