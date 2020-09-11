@@ -10,6 +10,7 @@ library("pheatmap")
 library("RColorBrewer")
 library("colorRamps") 
 library("ggrepel")
+library("limma")
 
 
 
@@ -118,13 +119,17 @@ for(curLevel in names(chuv$data)){
 
 
 ############################ Colors + additional vectors -----
+nlev = 11
+myColors = rev(colorRampPalette(brewer.pal(nlev,"RdYlBu"))(nlev))
 col_greens=brewer.pal(9, 'Greens')[2:9]
-colors_Regions=c("aquamarine","blue","brown","chartreuse3","chocolate2","deeppink")
+colors_Regions=c("lightskyblue","blue","brown","chartreuse3","chocolate2","deeppink")
 colors_TB=c("seagreen1","blueviolet")
 colorsPhylum <- c("blue","darkgreen",rgb(201/255, 79/255, 77/255),rgb(195/255,214/255,155/255),rgb(223/255,102/255,3/255),"light blue",rgb(255/255, 153/255, 255/255),"pink",rainbow(7))
 names(colorsPhylum)=c("Actinobacteria","Bacteroidetes","Firmicutes","Fusobacteria","Proteobacteria","Spirochaetes","SR1","Tenericutes","TM7","Gemmatimonadetes","GN01","Planctomycetes","Cyanobacteria","Others","Others2")
 patientColors <- primary.colors(20,step=3, no.white=TRUE)[c(1:6,8:9,12,18:19)]
 colorsTP=brewer.pal(9, 'Purples')[3:9] 
+
+myBreaks = seq(-1.5, 1.5, length.out=nlev+1)
 
 
 # correspondance Phylum with levels 
@@ -190,10 +195,14 @@ percentage <- dataFind.pca$percentage
 percentage <- paste( colnames(data1), "(", paste( as.character(percentage), "%", " explained variance)", sep="") )
 
 p <- ggplot(data1,aes(x=PC1,y=PC2,label=features, color=features , shape=TB)) + ggtitle(curLevel) 
-p <- p + geom_point(size=2)+theme  + xlab(percentage[1]) + ylab(percentage[2])
+p <- p + geom_point(size=4)+ theme_bw() + xlab(percentage[1]) + ylab(percentage[2])
+p <- p + scale_shape_manual(values=c(18, 17))
 p <- p + scale_color_manual(values=setNames(colors_Regions,levels(data1$features)))
-p <- p + theme(legend.position = "top", legend.title = element_blank(),
-                 legend.text = element_text(color = "black", size = 8))
+p <- p + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+               legend.position = "top", legend.title = element_blank(),
+               axis.line = element_line(colour = "black"),
+               legend.text = element_text(color = "black", size = rel(0.5)))
+p <- p + guides(color = guide_legend(override.aes = list(shape = 15)))
 print(p)
 
 
@@ -202,7 +211,8 @@ data0 <- data.frame("percentExplained"=dataFind.pca$percentage,
                     "PC"=paste0("PC",1:length(dataFind.pca$percentage)))
 
 p0 <- ggplot(data=data0, aes(x=PC, y=percentExplained)) 
-p0 <- p0 + geom_bar(stat="identity", width=0.5) + xlab("") + ylab("% variance explained")
+p0 <- p0 + geom_bar(stat="identity", width=0.8, fill="grey75") + theme_bw() + xlab("") + ylab("% variance explained")
+p0 <- p0 + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 print(p0)
 
 
@@ -216,22 +226,24 @@ for(curLevel in names(dataFindNorm.l[["FIND_2ndBatch"]])){
   conds=factor(annots[colnames(dataFind.norm),"TB"], levels=c("Y","N")); names(conds)=colnames(dataFind.norm)
   design=model.matrix(~ 0+conds)         
   colnames(design) = sub("conds", "", colnames(design))
-  rownames(design) = rownames(data1)
+  rownames(design) = rownames(annots)
   fit <- lmFit(dataFind.norm,design)
+  fit <- contrasts.fit(fit, makeContrasts(Y - N, levels = design))
   fit2 <- eBayes(fit)
   tt= topTable(fit2, coef=1, adjust="BH",number=nrow(dataFind.norm), sort.by="B") 
   DE_FIND_2ndBatch.l[[curLevel]]=data.frame("avgExp_TB"=rowMeans(dataFind.norm[rownames(tt),names(conds)[which(conds=="Y")]], na.rm=TRUE),
                                             "avgExp_nonTB"=rowMeans(dataFind.norm[rownames(tt),names(conds)[which(conds=="N")]], na.rm=TRUE),
                                             tt)
-  outfile=paste0("DEtaxa_",curLevel,".txt")
+  outfile=paste0("DEtaxa_",curLevel,"_final.txt")
   toExport=data.frame("bacteria"=rownames(tt),
                       "Phylum"=colPhylum.l[[curLevel]][rownames(tt),"Phylum"],
-                      "avgExp_TB"=rowMeans(dataFind.norm[,names(conds)[which(conds=="Y")]], na.rm=TRUE),
-                      "avgExp_nonTB"=rowMeans(dataFind.norm[,names(conds)[which(conds=="N")]], na.rm=TRUE),
+                      "avgExp_TB"=rowMeans(dataFind.norm[rownames(tt),names(conds)[which(conds=="Y")]], na.rm=TRUE),
+                      "avgExp_nonTB"=rowMeans(dataFind.norm[rownames(tt),names(conds)[which(conds=="N")]], na.rm=TRUE),
                       tt)
   write.table(toExport, file=outfile, sep="\t",row.names=FALSE, col.names=TRUE, quote=FALSE)
   
 }
+
 
 
 ############################  FIND2 (Figure 2)  ----
@@ -350,7 +362,7 @@ pp <- ggplot(dataToPlot.forBoxplot, aes(x=bacteria, y=abundance, fill=TB)) + xla
 pp <- pp + stat_boxplot(geom ='errorbar') + ggtitle(paste0("Representative phyla\n",curLevel))
 pp <- pp + geom_boxplot(color="grey50",varwidth=FALSE,outlier.alpha = 0.1) 
 pp <- pp + scale_fill_manual(values=setNames(colors_TB,c("Y","N")))
-pp <- pp + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+pp <- pp + theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1),panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 print(pp)
 
@@ -375,7 +387,7 @@ data1$TBColors=colors_TB[as.numeric(as.factor(data1$TB))]
 data1$Sequencing=annots[colnames(dataFind.norm),"Sequencing"]
 
 p1 <- ggplot(data1,aes(x=PC1,y=PC2,shape=interaction(features,TB), color=Sequencing )) + ggtitle(curLevel) 
-p1 <- p1 + geom_point(size=2)+theme  + xlab(percentage[1]) + ylab(percentage[2])
+p1 <- p1 + geom_point(size=2)+ theme_bw() + xlab(percentage[1]) + ylab(percentage[2])
 p1 <- p1 + scale_shape_manual(values=c(1, 2, 16, 17))
 p1 <- p1 + scale_color_manual(values=brewer.pal(n=8,name = "Set1")[-3])
 p1 <- p1 + theme(legend.position = "top", legend.title = element_blank(),
@@ -417,7 +429,7 @@ data2$PhylumColors <- colPhylum.l[[curLevel]][rownames(data2),"colorPhylum"]
 
 q1 <- ggplot(data2,aes(x=PC1,y=PC2,label=feature,color=Phylum )) + ggtitle(curLevel) 
 q1 <- q1 + scale_color_manual(values=colorsPhylum)
-q1 <- q1 + geom_point()+theme + geom_text_repel(size=3,nudge_y=0.05) + xlab(percentage[1]) + ylab(percentage[2])
+q1 <- q1 + geom_point()+ theme_bw() + geom_text_repel(size=3,nudge_y=0.05) + xlab(percentage[1]) + ylab(percentage[2])
 q1 <- q1 + expand_limits(x=c(-1,1), y=c(-1, 1)) + theme(legend.position = "none")
 
 print(q1)
